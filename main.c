@@ -1,5 +1,6 @@
-
-
+#include "Gamestate.h"
+#include "mPrint.h"
+#include "raylib.h"
 #include <dlfcn.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -15,20 +16,17 @@ const char *templib = "./templibgame.so";
 void *handle = NULL;
 
 void (*MyInitWindow)(void) = NULL;
-void (*MyInitWindowWithFrameCount)(unsigned int) = NULL;
+void (*MyInitWindowWithGamestate)(Gamestate *) = NULL;
 void (*MyDrawFrame)(void) = NULL;
 void (*MyCloseWindow)(void) = NULL;
 bool (*MyWindowShouldClose)(void) = NULL;
 bool (*MyIsKeyPressed)(int) = NULL;
-int (*MyGetFrameCount)() = NULL;
+Gamestate *(*MyGame_get_gamestate)(void) = NULL;
+void (*MyGame_gamestate_destroy)(Gamestate *) = NULL;
 
 time_t last_write_time = 0;
 int old_frame_count = 0;
-
-bool FileExists(const char *filename) {
-  struct stat file_stat;
-  return stat(filename, &file_stat) == 0;
-}
+Gamestate *old_gamestate = NULL;
 
 // get the last write time of a file
 time_t GetLastWriteTime(const char *filename) {
@@ -46,12 +44,17 @@ void LoadSymbols() {
   MyCloseWindow = dlsym(handle, "MyCloseWindow");
   MyWindowShouldClose = dlsym(handle, "MyWindowShouldClose");
   MyIsKeyPressed = dlsym(handle, "MyIsKeyPressed");
-  MyGetFrameCount = dlsym(handle, "GetFrameCount");
-  MyInitWindowWithFrameCount = dlsym(handle, "MyInitWindowWithFrameCount");
+  MyGame_get_gamestate =
+      (Gamestate * (*)(void)) dlsym(handle, "Game_get_gamestate");
+  MyInitWindowWithGamestate =
+      (void (*)(Gamestate *))dlsym(handle, "MyInitWindowWithGamestate");
+  MyGame_gamestate_destroy =
+      (void (*)(Gamestate *))dlsym(handle, "Gamestate_destroy");
 
   if (MyInitWindow == NULL || MyDrawFrame == NULL || MyCloseWindow == NULL ||
       MyWindowShouldClose == NULL || MyIsKeyPressed == NULL ||
-      MyGetFrameCount == NULL || MyInitWindowWithFrameCount == NULL) {
+      MyGame_get_gamestate == NULL || MyInitWindowWithGamestate == NULL ||
+      MyGame_gamestate_destroy == NULL) {
     fprintf(stderr, "dlsym failed: %s\n", dlerror());
     exit(1);
   }
@@ -70,17 +73,24 @@ void AutoReload() {
     last_write_time = GetLastWriteTime(libname);
     while (FileExists(lockfile)) {
       printf("Library is locked\n");
-      sleep(2);
+      sleep(1);
     }
 
-    old_frame_count = MyGetFrameCount();
+    // mPrint("Copying libgame.so to templibgame.so");
 
+    mPrint("Getting old gamestate");
+    old_gamestate = MyGame_get_gamestate();
+
+    mPrint("Closing window and unloading library");
     MyCloseWindow();
+    mPrint("Unloading library");
     dlclose(handle);
+    mPrint("Opening handle");
     OpenHandle();
+    mPrint("Loading symbols");
     LoadSymbols();
-    // MyInitWindow();
-    MyInitWindowWithFrameCount(old_frame_count);
+    mPrint("Reloading window with old gamestate");
+    MyInitWindowWithGamestate(old_gamestate);
   }
 }
 
@@ -94,6 +104,8 @@ int main() {
     AutoReload();
   }
   MyCloseWindow();
+  MyGame_gamestate_destroy(old_gamestate);
   dlclose(handle);
+
   return 0;
 }

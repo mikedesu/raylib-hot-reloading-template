@@ -1,16 +1,18 @@
-#include "Test.h"
+#include "Gamestate.h"
+#include "mPrint.h"
 #include "raylib.h"
 #include <stdio.h>
-
-unsigned int frame_count = 0;
+#include <stdlib.h>
 
 char frame_count_buffer[30] = {0};
 
 const int default_window_width = 1280;
 const int default_window_height = 720;
 
+Gamestate *gamestate = NULL;
+
 void MyInitWindow();
-void MyInitWindowWithFrameCount(unsigned int count);
+void MyInitWindowWithGamestate(Gamestate *state);
 void DrawFrame();
 void MyCloseWindow();
 bool MyWindowShouldClose();
@@ -21,18 +23,27 @@ unsigned int GetFrameCount();
 void MyInitWindow() {
   InitWindow(default_window_width, default_window_height, "Game");
   SetTargetFPS(60);
+  gamestate = Gamestate_init();
   UpdateFrameCountBuffer();
 }
 
-void MyInitWindowWithFrameCount(unsigned int count) {
+void MyInitWindowWithGamestate(Gamestate *state) {
+  mPrint("MyInitWindowWithGamestate");
   InitWindow(default_window_width, default_window_height, "Game");
   SetTargetFPS(60);
-  frame_count = count;
+  mPrint("Freeing old gamestate");
+  if (gamestate != NULL) {
+    Gamestate_destroy(gamestate);
+  }
+  mPrint("Setting new gamestate");
+  gamestate = state;
+  mPrint("Updating frame count buffer");
   UpdateFrameCountBuffer();
+  mPrint("Done with MyInitWindowWithGamestatex");
 }
 
 void UpdateFrameCountBuffer() {
-  sprintf(frame_count_buffer, "evildojo666: %d", frame_count);
+  sprintf(frame_count_buffer, "666: %d", gamestate->framecount);
 }
 
 void DrawFrame() {
@@ -40,15 +51,25 @@ void DrawFrame() {
   Color bgc = BLACK;
   Color fgc = WHITE;
   ClearBackground(bgc);
-  DrawText(frame_count_buffer, 0, 0, 40, fgc);
+  const int fontsize = 60;
+  DrawText(frame_count_buffer, GetScreenWidth() / 4, GetScreenHeight() / 4,
+           fontsize, fgc);
   DrawFPS(GetScreenWidth() - 100, 10);
   EndDrawing();
-  frame_count++;
+  gamestate->framecount++;
   UpdateFrameCountBuffer();
 }
 
 void MyCloseWindow() { CloseWindow(); }
 bool MyWindowShouldClose() { return WindowShouldClose(); }
 bool MyIsKeyPressed(int key) { return IsKeyPressed(key); }
+unsigned int GetFrameCount() { return gamestate->framecount; }
+Gamestate *Game_get_gamestate() { return gamestate; }
 
-unsigned int GetFrameCount() { return frame_count; }
+void Game_gamestate_destroy(Gamestate *gamestate) {
+  if (gamestate == NULL) {
+    fprintf(stderr, "Gamestate_destroy: gamestate is NULL\n");
+    return;
+  }
+  free(gamestate);
+}
