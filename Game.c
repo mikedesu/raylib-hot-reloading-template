@@ -1,5 +1,5 @@
 #include "Game.h"
-#include "Gamestate.h"
+#include "gamestate.h"
 #include "mPrint.h"
 #include "raylib.h"
 #include <stdio.h>
@@ -10,32 +10,32 @@ char frame_count_buffer[30] = {0};
 const int default_window_width = 1280;
 const int default_window_height = 720;
 
-Gamestate* gamestate = NULL;
+gamestate* g = NULL;
 
 void MyInitWindow() {
     InitWindow(default_window_width, default_window_height, "Game");
     SetTargetFPS(60);
-    gamestate = Gamestate_init();
+    g = gamestate_init();
     UpdateFrameCountBuffer();
 }
 
-void MyInitWindowWithGamestate(Gamestate* state) {
+void MyInitWindowWithGamestate(gamestate* state) {
     mPrint("MyInitWindowWithGamestate");
     InitWindow(default_window_width, default_window_height, "Game");
     SetTargetFPS(60);
     mPrint("Freeing old gamestate");
-    if(gamestate != NULL) {
-        Gamestate_destroy(gamestate);
+    if(g != NULL) {
+        gamestate_destroy(g);
     }
     mPrint("Setting new gamestate");
-    gamestate = state;
+    g = state;
     mPrint("Updating frame count buffer");
     UpdateFrameCountBuffer();
     mPrint("Done with MyInitWindowWithGamestatex");
 }
 
 void UpdateFrameCountBuffer() {
-    sprintf(frame_count_buffer, "666: %d", gamestate->framecount);
+    sprintf(frame_count_buffer, "666: %d", g->framecount);
 }
 
 void DrawFrame() {
@@ -51,7 +51,7 @@ void DrawFrame() {
 }
 
 void UpdateFrameCount() {
-    gamestate->framecount++;
+    g->framecount++;
 }
 
 void GameLoop() {
@@ -80,14 +80,14 @@ bool MyIsKeyPressed(int key) {
 }
 
 unsigned int GetFrameCount() {
-    return gamestate->framecount;
+    return g->framecount;
 }
 
-Gamestate* Game_get_gamestate() {
-    return gamestate;
+gamestate* Game_get_gamestate() {
+    return g;
 }
 
-void Game_gamestate_destroy(Gamestate* gamestate) {
+void Game_gamestate_destroy(gamestate* gamestate) {
     if(gamestate != NULL)
         free(gamestate);
 }

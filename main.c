@@ -1,5 +1,5 @@
 #include "Game.h"
-#include "Gamestate.h"
+#include "gamestate.h"
 #include "mPrint.h"
 
 //#include <dlfcn.h>
