@@ -10,7 +10,7 @@ MAIN_C=main.c
 all: game 
 
 #game: main.c libgame.so Gamestate.o
-game: main.c gameloader.o gamestate.o 
+game: main.c gameloader.o gamestate.o libgame.o
 	$(CC) -o $@ $(MAIN_C) gameloader.o gamestate.o  $(STATIC_LINK_RAYLIB) $(LINK_MATH)
 
 gameloader.o: gameloader.c
@@ -21,6 +21,12 @@ gamestate.o: gamestate.c
 	$(CC) $(OBJ) $^ -o $@
 	#$(CC) $(OBJ) $(POSITION_INDEPENDENT_CODE)  $^ -o $@
 	#$(CC) $(OBJ) $(POSITION_INDEPENDENT_CODE) $(STATIC_LINK_RAYLIB) $^ -o $@
+
+
+libgame.o: libgame.c
+	$(CC) $(OBJ) $^ -o $@
+	#$(CC) $(OBJ) $(POSITION_INDEPENDENT_CODE) $^ -o $@
+
 
 #libgame.so: $(LIBGAME_OBJECTS)
 #$(CC) $(SHARED) -o libgame.so $(LIBGAME_OBJECTS) $(STATIC_LINK_RAYLIB)

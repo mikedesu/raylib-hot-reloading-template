@@ -56,6 +56,9 @@ void updateframecount() {
 
 void gameloop() {
     while(!WindowShouldClose()) {
+
+        //updategamestate(g);
+
         drawframe();
         updateframecountbuffer();
     }
