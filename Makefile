@@ -1,7 +1,7 @@
 CC=gcc
 OBJ=-c
 SHARED=-shared
-LIBGAME_OBJECTS=Game.o gamestate.o 
+LIBGAME_OBJECTS=gameloader.o gamestate.o 
 STATIC_LINK_RAYLIB=-l:libraylib.a
 LINK_MATH=-lm
 POSITION_INDEPENDENT_CODE=-fPIC
@@ -10,10 +10,10 @@ MAIN_C=main.c
 all: game 
 
 #game: main.c libgame.so Gamestate.o
-game: main.c Game.o gamestate.o 
-	$(CC) -o $@ $(MAIN_C) Game.o gamestate.o  $(STATIC_LINK_RAYLIB) $(LINK_MATH)
+game: main.c gameloader.o gamestate.o 
+	$(CC) -o $@ $(MAIN_C) gameloader.o gamestate.o  $(STATIC_LINK_RAYLIB) $(LINK_MATH)
 
-Game.o: Game.c
+gameloader.o: gameloader.c
 	$(CC) $(OBJ) $^ -o $@
 	#$(CC) $(OBJ) $(POSITION_INDEPENDENT_CODE) $^ -o $@
 
