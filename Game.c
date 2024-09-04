@@ -1,3 +1,4 @@
+#include "Game.h"
 #include "Gamestate.h"
 #include "mPrint.h"
 #include "raylib.h"
@@ -10,19 +11,6 @@ const int default_window_width = 1280;
 const int default_window_height = 720;
 
 Gamestate* gamestate = NULL;
-
-void MyInitWindow();
-void MyInitWindowWithGamestate(Gamestate* state);
-void DrawFrame();
-void MyCloseWindow();
-bool MyWindowShouldClose();
-bool MyIsKeyPressed(int key);
-void UpdateFrameCountBuffer();
-unsigned int GetFrameCount();
-
-void GameLoop();
-void HandleInput();
-void UpdateGamestate();
 
 void MyInitWindow() {
     InitWindow(default_window_width, default_window_height, "Game");
@@ -60,42 +48,50 @@ void DrawFrame() {
     DrawFPS(GetScreenWidth() - 100, 10);
     EndDrawing();
     gamestate->framecount++;
-    UpdateFrameCountBuffer();
 }
 
-void HandleInput() {
-    // do stuff here
-}
+//void HandleInput() {
+// do stuff here
+//}
 
-void UpdateGamestate() {
-    // do stuff here
-}
+//void UpdateGamestate() {
+// do stuff here
+//}
 
 void GameLoop() {
     while(!WindowShouldClose()) {
-        HandleInput();
+        //HandleInput();
         DrawFrame();
+        UpdateFrameCountBuffer();
     }
 }
 
 void GameRun() {
+    mPrint("GameRun");
+    mPrint("initing window");
     MyInitWindow();
+    mPrint("entering gameloop");
     GameLoop();
-    MyCloseWindow();
-}
-
-void MyCloseWindow() {
+    mPrint("closing window");
     CloseWindow();
 }
+
+//void MyCloseWindow() {
+//    CloseWindow();
+//}
+
 bool MyWindowShouldClose() {
     return WindowShouldClose();
 }
+
 bool MyIsKeyPressed(int key) {
     return IsKeyPressed(key);
 }
+
 unsigned int GetFrameCount() {
     return gamestate->framecount;
 }
+
 Gamestate* Game_get_gamestate() {
     return gamestate;
 }

@@ -1,70 +1,55 @@
+#include "Game.h"
 #include "Gamestate.h"
 #include "mPrint.h"
-#include "raylib.h"
-#include <dlfcn.h>
+
+//#include <dlfcn.h>
+#include <raylib.h>
 #include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
+//#include <stdio.h>
+//#include <stdlib.h>
 #include <sys/stat.h>
-#include <time.h>
+//#include <time.h>
 #include <unistd.h>
 
-const char* libname = "./libgame.so";
-const char* lockfile = "./libgame.so.lockfile";
-const char* templib = "./templibgame.so";
+//const char* libname = "./libgame.so";
+//const char* lockfile = "./libgame.so.lockfile";
+//const char* templib = "./templibgame.so";
 
-void* handle = NULL;
+//void* handle = NULL;
 
-void (*MyInitWindow)(void) = NULL;
-void (*MyInitWindowWithGamestate)(Gamestate*) = NULL;
-void (*MyDrawFrame)(void) = NULL;
-void (*MyCloseWindow)(void) = NULL;
-bool (*MyWindowShouldClose)(void) = NULL;
-bool (*MyIsKeyPressed)(int) = NULL;
-Gamestate* (*MyGame_get_gamestate)(void) = NULL;
-void (*MyGame_gamestate_destroy)(Gamestate*) = NULL;
-void (*MyGameRun)() = NULL;
+//void (*MyGame_gamestate_destroy)(Gamestate*) = NULL;
+//void (*MyGameRun)() = NULL;
 
-time_t last_write_time = 0;
-int old_frame_count = 0;
-Gamestate* old_gamestate = NULL;
+//time_t last_write_time = 0;
+//int old_frame_count = 0;
+//Gamestate* old_gamestate = NULL;
 
 // get the last write time of a file
-time_t GetLastWriteTime(const char* filename) {
-    struct stat file_stat;
-    time_t retval = 0;
-    if(stat(filename, &file_stat) == 0) {
-        retval = file_stat.st_mtime;
-    }
-    return retval;
-}
+//time_t GetLastWriteTime(const char* filename) {
+//    struct stat file_stat;
+//    time_t retval = 0;
+//    if(stat(filename, &file_stat) == 0) {
+//        retval = file_stat.st_mtime;
+//    }
+//    return retval;
+//}
 
-void LoadSymbols() {
-    MyInitWindow = dlsym(handle, "MyInitWindow");
-    MyDrawFrame = dlsym(handle, "DrawFrame");
-    MyCloseWindow = dlsym(handle, "MyCloseWindow");
-    MyWindowShouldClose = dlsym(handle, "MyWindowShouldClose");
-    MyIsKeyPressed = dlsym(handle, "MyIsKeyPressed");
-    MyGame_get_gamestate = (Gamestate * (*)(void)) dlsym(handle, "Game_get_gamestate");
-    MyInitWindowWithGamestate = (void (*)(Gamestate*))dlsym(handle, "MyInitWindowWithGamestate");
-    MyGame_gamestate_destroy = (void (*)(Gamestate*))dlsym(handle, "Gamestate_destroy");
-    MyGameRun = dlsym(handle, "GameRun");
+//void LoadSymbols() {
+//    MyGame_gamestate_destroy = (void (*)(Gamestate*))dlsym(handle, "Gamestate_destroy");
+//    MyGameRun = dlsym(handle, "GameRun");
+//    if(MyGame_gamestate_destroy == NULL || MyGameRun == NULL) {
+//        fprintf(stderr, "dlsym failed: %s\n", dlerror());
+//        exit(1);
+//    }
+//}
 
-    if(MyInitWindow == NULL || MyDrawFrame == NULL || MyCloseWindow == NULL ||
-       MyWindowShouldClose == NULL || MyIsKeyPressed == NULL || MyGame_get_gamestate == NULL ||
-       MyInitWindowWithGamestate == NULL || MyGame_gamestate_destroy == NULL || MyGameRun == NULL) {
-        fprintf(stderr, "dlsym failed: %s\n", dlerror());
-        exit(1);
-    }
-}
-
-void OpenHandle() {
-    handle = dlopen(libname, RTLD_LAZY);
-    if(!handle) {
-        fprintf(stderr, "dlopen failed: %s\n", dlerror());
-        exit(1);
-    }
-}
+//void OpenHandle() {
+//    handle = dlopen(libname, RTLD_LAZY);
+//    if(!handle) {
+//        fprintf(stderr, "dlopen failed: %s\n", dlerror());
+//        exit(1);
+//    }
+//}
 
 //void AutoReload() {
 //    if(GetLastWriteTime(libname) > last_write_time) {
@@ -89,16 +74,11 @@ void OpenHandle() {
 //}
 
 int main() {
-    OpenHandle();
-    last_write_time = GetLastWriteTime(libname);
-    LoadSymbols();
-    // MyInitWindow();
-    // while (!MyWindowShouldClose()) {
-    // MyDrawFrame();
-    // AutoReload();
-    //}
-    MyGameRun();
-    MyGame_gamestate_destroy(old_gamestate);
-    dlclose(handle);
+    //OpenHandle();
+    //last_write_time = GetLastWriteTime(libname);
+    //LoadSymbols();
+    GameRun();
+    //MyGame_gamestate_destroy(old_gamestate);
+    //dlclose(handle);
     return 0;
 }
