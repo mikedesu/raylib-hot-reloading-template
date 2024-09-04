@@ -1,15 +1,14 @@
 #include "Game.h"
-#include "gamestate.h"
-#include "mPrint.h"
-
+//#include "gamestate.h"
+//#include "mprint.h"
 //#include <dlfcn.h>
-#include <raylib.h>
-#include <stdbool.h>
+//#include <raylib.h>
+//#include <stdbool.h>
 //#include <stdio.h>
 //#include <stdlib.h>
-#include <sys/stat.h>
+//#include <sys/stat.h>
 //#include <time.h>
-#include <unistd.h>
+//#include <unistd.h>
 
 //const char* libname = "./libgame.so";
 //const char* lockfile = "./libgame.so.lockfile";
@@ -77,7 +76,7 @@ int main() {
     //OpenHandle();
     //last_write_time = GetLastWriteTime(libname);
     //LoadSymbols();
-    GameRun();
+    gamerun();
     //MyGame_gamestate_destroy(old_gamestate);
     //dlclose(handle);
     return 0;

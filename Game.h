@@ -4,15 +4,15 @@
 
 #include <stdbool.h>
 
-void MyInitWindow();
-void MyInitWindowWithGamestate(gamestate* state);
-void DrawFrame();
-bool MyWindowShouldClose();
-bool MyIsKeyPressed(int key);
-void UpdateFrameCountBuffer();
-unsigned int GetFrameCount();
-void GameLoop();
-void GameRun();
-//void HandleInput();
-//void UpdateGamestate();
-void UpdateFrameCount();
+void myinitwindow();
+void myinitwindowwithgamestate(gamestate* state);
+void drawframe();
+bool mywindowshouldclose();
+bool myiskeypressed(int key);
+void updateframecountbuffer();
+unsigned int getframecount();
+void gameloop();
+void gamerun();
+//void handleinput();
+//void updategamestate();
+void updateframecount();
