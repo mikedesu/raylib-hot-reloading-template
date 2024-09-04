@@ -3,6 +3,7 @@
 #include "gamestate.h"
 
 #include <stdbool.h>
+#include <time.h>
 
 void myinitwindow();
 void myinitwindowwithgamestate(gamestate* state);
@@ -15,4 +16,7 @@ void gameloop();
 void gamerun();
 //void handleinput();
 //void updategamestate();
-void updateframecount();
+//void updateframecount();
+time_t getlastwritetime(const char* filename);
+void openhandle();
+void loadsymbols();

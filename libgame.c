@@ -1,10 +1,11 @@
-#include "libgame.h"
+//#include "libgame.h"
 
-//#include <stdlib.h>
+#include "gamestate.h"
+
+void updategamestate(gamestate* state);
 
 void updategamestate(gamestate* state) {
     // for right now, we will just update the frame count
-    if(state) {
+    if(state)
         state->framecount++;
-    }
 }
