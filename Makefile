@@ -1,20 +1,26 @@
+CC=gcc
+OBJ=-c
+SHARED=-shared
+LIBGAME_OBJECTS=Game.o Gamestate.o
+STATIC_LINK_RAYLIB=-l:libraylib.a
+LINK_MATH=-lm
+POSITION_INDEPENDENT_CODE=-fPIC
+MAIN_C=main.c
+
 all: game 
 
 game: main.c libgame.so Gamestate.o
-	gcc -o game main.c -l:libraylib.a -lm
-
-Test.o: Test.c
-	gcc -c -fPIC Test.c -o Test.o
+	$(CC) -o $@ $(MAIN_C) $(STATIC_LINK_RAYLIB) $(LINK_MATH)
 
 Game.o: Game.c
 	touch libgame.so.lockfile
-	gcc -c -fPIC Game.c -o Game.o
+	$(CC) $(OBJ) $(POSITION_INDEPENDENT_CODE) $^ -o $@
 
 Gamestate.o: Gamestate.c
-	gcc -c -fPIC Gamestate.c -o Gamestate.o
+	$(CC) $(OBJ) $(POSITION_INDEPENDENT_CODE) $^ -o $@
 
-libgame.so: Game.o Test.o Gamestate.o
-	gcc -shared -o libgame.so Game.o Test.o Gamestate.o -l:libraylib.a
+libgame.so: $(LIBGAME_OBJECTS)
+	$(CC) $(SHARED) -o libgame.so $(LIBGAME_OBJECTS) $(STATIC_LINK_RAYLIB)
 	rm -rfv libgame.so.lockfile
 
 clean:
