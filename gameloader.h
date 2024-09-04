@@ -20,3 +20,4 @@ void gamerun();
 time_t getlastwritetime(const char* filename);
 void openhandle();
 void loadsymbols();
+void autoreload();
