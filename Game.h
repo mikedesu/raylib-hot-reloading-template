@@ -15,3 +15,4 @@ void GameLoop();
 void GameRun();
 //void HandleInput();
 //void UpdateGamestate();
+void UpdateFrameCount();

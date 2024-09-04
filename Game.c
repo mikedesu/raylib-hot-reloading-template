@@ -47,20 +47,15 @@ void DrawFrame() {
     DrawText(frame_count_buffer, GetScreenWidth() / 4, GetScreenHeight() / 4, fontsize, fgc);
     DrawFPS(GetScreenWidth() - 100, 10);
     EndDrawing();
+    UpdateFrameCount();
+}
+
+void UpdateFrameCount() {
     gamestate->framecount++;
 }
 
-//void HandleInput() {
-// do stuff here
-//}
-
-//void UpdateGamestate() {
-// do stuff here
-//}
-
 void GameLoop() {
     while(!WindowShouldClose()) {
-        //HandleInput();
         DrawFrame();
         UpdateFrameCountBuffer();
     }
@@ -75,10 +70,6 @@ void GameRun() {
     mPrint("closing window");
     CloseWindow();
 }
-
-//void MyCloseWindow() {
-//    CloseWindow();
-//}
 
 bool MyWindowShouldClose() {
     return WindowShouldClose();
